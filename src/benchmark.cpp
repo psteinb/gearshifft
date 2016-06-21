@@ -37,11 +37,9 @@ RUN_BENCHMARKS_NORMALIZED_FFT(ClFFT,
 #include "hcfft.hpp"
 
 // -- Execute Benchmarks --
-RUN_BENCHMARKS_NORMALIZED_FFT(ClFFT,
+RUN_BENCHMARKS_NORMALIZED_FFT(hcFFT,
                               gearshifft::hcfft::Context,
-                              gearshifft::hcfft::Inplace_Real,
                               gearshifft::hcfft::Outplace_Real,
-                              gearshifft::hcfft::Inplace_Complex,
                               gearshifft::hcfft::Outplace_Complex
                               )
 
