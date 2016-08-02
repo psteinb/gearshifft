@@ -74,9 +74,30 @@ endif()
 if(NOT CLFFT_FOUND)
   message("clFFT benchmark disabled.")
 endif()
-if(NOT CLFFT_FOUND AND NOT CUDA_FOUND)
+
+#------------------------------------------------------------------------------
+# ROCM+HCFFT
+#------------------------------------------------------------------------------
+find_package(hcFFT)
+if(HCFFT_FOUND)
+  include_directories(${HCFFT_INCLUDE_DIRS})
+  list(APPEND FFTLIBS "hcfft")
+  message(">> hcFFT -> " ${HCFFT_LIBRARIES} " " ${HCFFT_INCLUDE_DIRS})
+  message(">> hcFFT compiler: " ${HCFFT_CXX_COMPILER})
+  SET(CMAKE_CXX_COMPILER ${HCFFT_CXX_COMPILER})
+  message(">> hcFFT cxxflags: " ${HCFFT_CXXFLAGS})
+  message(">> hcFFT ldflags: " ${HCFFT_LDFLAGS})  
+  #message(WARNING ">> Warning: no runner for hcfft implemented yet")
+endif()
+
+if(NOT HCFFT_FOUND)
+  message("hcFFT benchmark disabled.")
+endif()
+
+if(NOT (CLFFT_FOUND OR CUDA_FOUND OR HCFFT_FOUND))
   message(FATAL_ERROR "-> No FFT library for benchmark found !!!")
 endif()
+
 
 #------------------------------------------------------------------------------
 # Helper function to add specific FFT library benchmark
@@ -96,6 +117,16 @@ function(add_exec Tlib Ttype)
       PROPERTIES COMPILE_FLAGS "-DOPENCL_ENABLED ${PROJECT_EXEC_FLAGS}")
     set(LIBS ${LIBS} ${CLFFT_LIBRARIES} ${OPENCL_LIBRARIES})
   endif()
+
+  if (Tlib STREQUAL "hcfft")
+    SET(CMAKE_CXX_COMPILER ${HCFFT_CXX_COMPILER})
+    set_target_properties(${PROJECT_EXEC}
+      PROPERTIES COMPILE_FLAGS " -DHCFFT_ENABLED ${PROJECT_EXEC_FLAGS} ${HCFFT_CXXFLAGS}")
+    set_target_properties(${PROJECT_EXEC}
+      PROPERTIES LINK_FLAGS " -DHCFFT_ENABLED ${HCFFT_LDFLAGS}")
+    set(LIBS ${LIBS} ${HCFFT_LIBRARIES})
+  endif()
+  
   target_link_libraries(${PROJECT_EXEC} ${Boost_LIBRARIES} ${LIBS})
   add_test(NAME ${PROJECT_EXEC} COMMAND ${PROJECT_EXEC})
 endfunction()

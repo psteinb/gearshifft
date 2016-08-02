@@ -33,3 +33,15 @@ RUN_BENCHMARKS_NORMALIZED_FFT(ClFFT,
 
 #endif
 
+#ifdef HCFFT_ENABLED
+#include "hcfft.hpp"
+
+// -- Execute Benchmarks --
+RUN_BENCHMARKS_NORMALIZED_FFT(hcFFT,
+                              gearshifft::hcfft::Context,
+                              gearshifft::hcfft::Outplace_Real,
+                              gearshifft::hcfft::Outplace_Complex
+                              )
+
+#endif
+
