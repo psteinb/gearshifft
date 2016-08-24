@@ -39,19 +39,6 @@ namespace gearshifft {
     return os;
   }
 
-  /**
-   * Basic 2D vector with template type.
-   * Used for test data for complex FFTs
-   */
-  // template<typename REAL>
-  // struct Real2D {
-  //   using type = REAL;
-  //   REAL x, y;
-  // };
-
-  template<typename REAL>
-  using Real2D = std::complex<REAL>;
-
   enum struct RecordType {
     Device = 0,
     Allocation,

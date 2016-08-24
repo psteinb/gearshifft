@@ -7,6 +7,7 @@
 #include <math.h>
 #include <numeric>
 #include <vector>
+#include <complex>
 
 // http://www.boost.org/doc/libs/1_56_0/doc/html/align/tutorial.html
 #include <boost/align/aligned_allocator.hpp>
@@ -26,7 +27,7 @@ namespace gearshifft {
   template<typename RealType, size_t Dimensions>
   class BenchmarkData : boost::noncopyable {
   public:
-    using ComplexType    = Real2D<RealType>;
+    using ComplexType    = std::complex<RealType>;
     using BenchmarkDataT = BenchmarkData<RealType, Dimensions>;
     using Extent         = std::array<size_t, Dimensions>;
     using RealVector     = std::vector<RealType, boost::alignment::
